@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Number Guessing Game</title>
+  <style>
+   
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* styling */
+    .game-container {
+      margin-top: 50px;
+      padding: 20px;
+      border-radius: 10px;
+      background-color: #ffffff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 300px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    
+    h1 {
+      color: #333;
+    }
+
+   
+    #guessInput {
+      padding: 10px;
+      font-size: 16px;
+      text-align: center;
+      width: 50px;
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    
+    #message {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #333;
+    }
+
+    
+    #restartBtn {
+      margin-top: 20px;
+      background-color: #ff6347;
+      display: none;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    /* Life count*/
+    #lives {
+      font-size: 24px;
+      color: #d80000;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="game-container">
+    <h1>Number Guessing Game</h1>
+    <div id="lives">
+      <p>Lives: <span id="lifeCount">❤️❤️❤️</span></p>
+    </div>
+
+    <p>Guess a number between 1 and 100:</p>
+    <input type="number" id="guessInput" min="1" max="100">
+    <button onclick="submitGuess()">Submit Guess</button>
+
+    <div id="message"></div>
+
+    <button id="restartBtn" onclick="restartGame()">Restart Game</button>
+  </div>
+
+  <script>
+    let correctNumber;
+    let lives = 3;
+    let gameOver = false;
+
+    // Start
+    function startGame() {
+      correctNumber = Math.floor(Math.random() * 100) + 1; 
+      lives = 3; 
+      gameOver = false;
+      updateLivesDisplay();
+      document.getElementById('message').textContent = '';
+      document.getElementById('restartBtn').style.display = 'none'; 
+    }
+
+    
+    function updateLivesDisplay() {
+      const lifeCount = '❤️'.repeat(lives);
+      document.getElementById('lifeCount').textContent = lifeCount;
+    }
+
+   
+    function submitGuess() {
+      if (gameOver) return; 
+
+      const guess = parseInt(document.getElementById('guessInput').value); 
+
+      if (isNaN(guess) || guess < 1 || guess > 100) {
+        document.getElementById('message').textContent = 'Please enter a number between 1 and 100.';
+        return;
+      }
+
+      if (guess === correctNumber) {
+        document.getElementById('message').textContent = '🎉 Correct! You win!';
+        gameOver = true;
+        document.getElementById('restartBtn').style.display = 'inline-block'; 
+      } else {
+        lives--; // Lose a life
+        updateLivesDisplay(); // Update
+
+        if (lives === 0) {
+          document.getElementById('message').textContent = '😞 Game Over! You have no lives left.';
+          gameOver = true;
+          document.getElementById('restartBtn').style.display = 'inline-block'; 
+        } else if (guess < correctNumber) {
+          document.getElementById('message').textContent = 'Too low! Try again.';
+        } else {
+          document.getElementById('message').textContent = 'Too high! Try again.';
+        }
+      }
+    }
+
+    // Restart
+    function restartGame() {
+      startGame();
+      document.getElementById('guessInput').value = ''; 
+    }
+
+    
+    window.onload = startGame;
+  </script>
+
+</body>
+</html>
